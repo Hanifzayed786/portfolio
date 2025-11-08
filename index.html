@@ -9,8 +9,6 @@
     
     <style>
         /* --- 1. Variables & Global Reset (SYNTAX ERRORS FIXED HERE) --- */
-        
-    /* --- 1. Variables & Global Reset (SYNTAX ERRORS FIXED HERE) --- */
     :root {
         --primary-color: #0d1117;    
         --secondary-color: #161b22; 
@@ -205,6 +203,7 @@
             width: 100%;
         }
 
+        /* FIXED: Enhanced name typing animation */
         .name {
             font-size: 3.5rem;
             font-weight: 700;
@@ -214,7 +213,11 @@
             white-space: nowrap;
             border-right: 3px solid var(--accent-color);
             width: 0;
-            animation: typing 3.5s steps(24, end) forwards, blink-cursor 0.75s step-end infinite;
+            animation: typing 4s steps(24, end) forwards, blink-cursor 0.75s step-end infinite;
+            animation-delay: 0.8s;
+            /* Ensure the animation works on all devices */
+            display: inline-block;
+            min-height: 1.2em; /* Prevent layout shift */
         }
 
         .role {
@@ -223,13 +226,13 @@
             font-weight: 500;
             margin-bottom: 30px;
             opacity: 0;
-            animation: fadeIn 0.8s ease forwards 1.5s;
+            animation: fadeIn 0.8s ease forwards 2.3s;
         }
 
         .summary {
             margin-bottom: 30px;
             opacity: 0;
-            animation: fadeIn 0.8s ease forwards 2s;
+            animation: fadeIn 0.8s ease forwards 2.8s;
         }
 
         .btn-primary {
@@ -243,7 +246,7 @@
             transition: var(--transition);
             border: 2px solid var(--accent-color);
             opacity: 0;
-            animation: fadeIn 0.8s ease forwards 2.5s;
+            animation: fadeIn 0.8s ease forwards 3.3s;
             box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
         }
 
@@ -655,6 +658,7 @@
         }
 
         /* --- 8. Animations (Keyframes & Classes) --- */
+        /* FIXED: Enhanced typing animation for all devices */
         @keyframes typing {
             from { width: 0 }
             to { width: 100% }
@@ -756,16 +760,24 @@
                 margin: 0 10px 10px;
             }
 
-            /* FIX: Ensure the animation properties are compatible with smaller viewports */
+            /* FIXED: Enhanced mobile typing animation */
             .name-container {
-                width: 100%; /* Important to make the typing work when text is long */
+                width: 100%;
+                display: flex;
+                justify-content: center;
             }
 
             .name {
                 font-size: 2.5rem;
-                /* Adjust animation for faster mobile load */
-                animation: typing 2.5s steps(24, end) forwards, blink-cursor 0.75s step-end infinite; 
-                width: 100%; /* Force width to be 100% for the animation to complete on one line */
+                /* Ensure full name is typed on mobile */
+                animation: typing 3s steps(24, end) forwards, blink-cursor 0.75s step-end infinite;
+                animation-delay: 0.8s;
+                /* Prevent text wrapping during animation */
+                white-space: nowrap;
+                overflow: hidden;
+                /* Ensure the animation completes on one line */
+                width: 0;
+                min-height: 1.2em;
             }
 
             .hero-image {
@@ -789,6 +801,9 @@
 
             .name {
                 font-size: 2.2rem;
+                /* Further adjustment for small screens */
+                animation: typing 2.5s steps(24, end) forwards, blink-cursor 0.75s step-end infinite;
+                animation-delay: 0.8s;
             }
 
             .role {
@@ -811,6 +826,9 @@
         @media (max-width: 400px) {
             .name {
                 font-size: 1.9rem;
+                /* Final adjustment for very small screens */
+                animation: typing 2s steps(24, end) forwards, blink-cursor 0.75s step-end infinite;
+                animation-delay: 0.8s;
             }
             
             .hero-image {
@@ -1058,17 +1076,36 @@
                 }
             });
             
-            // 3. Enhanced Name Typing Animation for Mobile
+            // 3. Enhanced Name Typing Animation for All Devices
             const nameElement = document.querySelector('.name');
             const nameText = nameElement.textContent;
             
-            // Reset animation on window resize to handle mobile viewport changes
-            window.addEventListener('resize', () => {
+            // Function to restart animation
+            function restartAnimation() {
+                // Get current animation duration based on screen size
+                let animationDuration = "4s";
+                if (window.innerWidth <= 768) {
+                    animationDuration = "3s";
+                }
+                if (window.innerWidth <= 576) {
+                    animationDuration = "2.5s";
+                }
+                if (window.innerWidth <= 400) {
+                    animationDuration = "2s";
+                }
+                
                 // Force reflow to restart animation
                 nameElement.style.animation = 'none';
                 void nameElement.offsetWidth; // Trigger reflow
-                nameElement.style.animation = `typing 3.5s steps(${nameText.length}, end) forwards, blink-cursor 0.75s step-end infinite`;
-            });
+                nameElement.style.animation = `typing ${animationDuration} steps(${nameText.length}, end) forwards, blink-cursor 0.75s step-end infinite`;
+                nameElement.style.animationDelay = "0.8s";
+            }
+            
+            // Restart animation on window resize
+            window.addEventListener('resize', restartAnimation);
+            
+            // Initial animation setup
+            restartAnimation();
         });
     </script>
 </body>
