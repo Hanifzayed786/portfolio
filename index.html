@@ -8,30 +8,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- 1. Variables & Global Reset (SYNTAX ERRORS FIXED HERE) --- */
-    :root {
-        --primary-color: #0d1117;    
-        --secondary-color: #161b22; 
-        --accent-color: #00bcd4;     
-        --accent-hover: #4dd0e1;     
-        --text-color: #c9d1d9;       
-        --text-header: #ffffff;      
-        --text-muted: #8b949e;       
-        --border-color: #30363d;
-        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        --font-family: 'Poppins', sans-serif;
-        --max-width: 1200px;
-        --border-radius: 12px;
-        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    }
+        /* --- 1. Variables & Global Reset --- */
+        :root {
+            --primary-color: #0d1117;    
+            --secondary-color: #161b22; 
+            --accent-color: #00bcd4;     
+            --accent-hover: #4dd0e1;     
+            --text-color: #c9d1d9;       
+            --text-header: #ffffff;      
+            --text-muted: #8b949e;       
+            --border-color: #30363d;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --font-family: 'Poppins', sans-serif;
+            --max-width: 1200px;
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --section-spacing: clamp(4rem, 8vw, 8rem);
+        }
 
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         html {
             scroll-behavior: smooth;
+            scroll-padding-top: 80px; /* Account for fixed header */
         }
 
         body {
@@ -45,7 +48,11 @@
         .container {
             max-width: var(--max-width);
             margin: 0 auto;
-            padding: 80px 20px;
+            padding: 0 clamp(1rem, 4vw, 2rem);
+        }
+
+        section {
+            padding: var(--section-spacing) 0;
         }
 
         a {
@@ -65,27 +72,24 @@
         }
 
         h2 {
-            font-size: 2.5rem;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
             position: relative;
             display: inline-block;
             margin-bottom: 60px;
+            text-align: center;
+            width: 100%;
         }
 
         h2::after {
             content: '';
             position: absolute;
             bottom: -10px;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 60px;
             height: 4px;
             background: var(--accent-color);
             border-radius: 2px;
-        }
-
-        section h2 {
-            width: fit-content;
-            margin-left: auto;
-            margin-right: auto;
         }
 
         p {
@@ -98,7 +102,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            background-color: rgba(13, 17, 23, 0.9);
+            background-color: rgba(13, 17, 23, 0.95);
             backdrop-filter: blur(10px);
             padding: 15px 0;
             z-index: 1000;
@@ -107,7 +111,7 @@
         }
 
         #navbar.sticky {
-            background-color: rgba(13, 17, 23, 0.95);
+            background-color: rgba(13, 17, 23, 0.98);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             border-bottom: 1px solid var(--border-color);
         }
@@ -118,11 +122,11 @@
             align-items: center;
             max-width: var(--max-width);
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 clamp(1rem, 4vw, 2rem);
         }
 
         .logo {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--accent-color);
             display: flex;
@@ -133,18 +137,18 @@
             margin-right: 8px;
         }
 
-        nav {
+        .nav-links {
             display: flex;
+            gap: clamp(1rem, 3vw, 2rem);
         }
 
-        nav a {
-            margin-left: 30px;
+        .nav-links a {
             font-weight: 500;
             position: relative;
             padding: 5px 0;
         }
 
-        nav a::after {
+        .nav-links a::after {
             content: '';
             position: absolute;
             bottom: 0;
@@ -155,8 +159,17 @@
             transition: var(--transition);
         }
 
-        nav a:hover::after {
+        .nav-links a:hover::after {
             width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
         }
 
         /* --- 3. Hero Section --- */
@@ -196,16 +209,18 @@
             animation: fadeIn 0.8s ease forwards 0.5s;
         }
 
+        /* FIXED: Name Typing Animation Container */
         .name-container {
             position: relative;
             display: inline-block;
             margin-bottom: 15px;
             width: 100%;
+            overflow: hidden;
         }
 
-        /* FIXED: Enhanced name typing animation */
+        /* FIXED: Enhanced Name Typing Animation */
         .name {
-            font-size: 3.5rem;
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
             font-weight: 700;
             color: var(--text-header);
             line-height: 1.1;
@@ -213,16 +228,15 @@
             white-space: nowrap;
             border-right: 3px solid var(--accent-color);
             width: 0;
-            animation: typing 4s steps(24, end) forwards, blink-cursor 0.75s step-end infinite;
+            animation: typing 3s steps(24, end) forwards, blink-cursor 0.75s step-end infinite;
             animation-delay: 0.8s;
-            /* Ensure the animation works on all devices */
             display: inline-block;
-            min-height: 1.2em; /* Prevent layout shift */
+            min-height: 1.2em;
         }
 
         .role {
             color: var(--accent-color);
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 2.5vw, 1.5rem);
             font-weight: 500;
             margin-bottom: 30px;
             opacity: 0;
@@ -236,7 +250,9 @@
         }
 
         .btn-primary {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
             background-color: var(--accent-color);
             color: var(--primary-color);
             padding: 14px 32px;
@@ -415,7 +431,7 @@
             flex-grow: 1;
         }
 
-        /* --- 6. Certificates Section ENHANCED with Clickability --- */
+        /* --- 6. Certificates Section --- */
         .section-subtitle {
             text-align: center;
             margin-top: -30px;
@@ -459,26 +475,6 @@
             object-fit: cover;
             transition: transform 0.5s;
         }
-        
-        /* Fallback content for when image is missing or broken */
-        .cert-image:before {
-            content: attr(alt);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            font-weight: 500;
-            border: 2px dashed var(--accent-color);
-            box-sizing: border-box;
-        }
 
         .cert-card-image:hover .cert-image {
             transform: scale(1.05);
@@ -509,15 +505,15 @@
         
         /* --- Certificate Modal (Lightbox) Styles --- */
         #certModal {
-            display: none; /* Hidden by default */
+            display: none;
             position: fixed;
-            z-index: 2000; /* Above everything */
+            z-index: 2000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.95); /* Black w/ opacity */
+            background-color: rgba(0, 0, 0, 0.95);
             padding-top: 50px;
         }
 
@@ -598,6 +594,8 @@
 
         .social-links {
             margin-top: 25px;
+            display: flex;
+            gap: 15px;
         }
 
         .social-links a {
@@ -608,7 +606,6 @@
             height: 40px;
             background: var(--primary-color);
             border-radius: 50%;
-            margin-right: 15px;
             color: var(--text-color);
             transition: var(--transition);
         }
@@ -696,20 +693,6 @@
         }
 
         /* --- 9. Media Queries (Responsiveness) --- */
-        @media (max-width: 1200px) {
-            .container {
-                padding: 70px 20px;
-            }
-            
-            .hero-image {
-                width: 45%;
-            }
-            
-            .name {
-                font-size: 3.2rem;
-            }
-        }
-
         @media (max-width: 992px) {
             #hero {
                 flex-direction: column;
@@ -735,10 +718,6 @@
                 flex-basis: 100%;
             }
             
-            .name {
-                font-size: 2.8rem;
-            }
-            
             .modal-content {
                 width: 95%;
                 max-width: 95%;
@@ -746,51 +725,46 @@
         }
 
         @media (max-width: 768px) {
-            .nav-content {
-                flex-direction: column;
+            .mobile-menu-btn {
+                display: block;
             }
 
-            nav {
-                margin-top: 15px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            nav a {
-                margin: 0 10px 10px;
-            }
-
-            /* FIXED: Enhanced mobile typing animation */
-            .name-container {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
                 width: 100%;
-                display: flex;
-                justify-content: center;
+                background-color: var(--primary-color);
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                gap: 1rem;
+                transform: translateY(-100%);
+                opacity: 0;
+                transition: var(--transition);
+                border-bottom: 1px solid var(--border-color);
             }
 
-            .name {
-                font-size: 2.5rem;
-                /* Ensure full name is typed on mobile */
-                animation: typing 3s steps(24, end) forwards, blink-cursor 0.75s step-end infinite;
-                animation-delay: 0.8s;
-                /* Prevent text wrapping during animation */
-                white-space: nowrap;
-                overflow: hidden;
-                /* Ensure the animation completes on one line */
-                width: 0;
-                min-height: 1.2em;
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
             }
 
             .hero-image {
                 width: 90%;
                 height: 250px;
             }
-
-            h2 {
-                font-size: 2rem;
+            
+            /* FIXED: Mobile name typing animation */
+            .name-container {
+                display: flex;
+                justify-content: center;
             }
             
-            .container {
-                padding: 60px 15px;
+            .name {
+                font-size: clamp(1.9rem, 7vw, 2.8rem);
+                animation: typing 2.5s steps(24, end) forwards, blink-cursor 0.75s step-end infinite;
+                animation-delay: 0.8s;
             }
         }
 
@@ -799,45 +773,28 @@
                 grid-template-columns: 1fr;
             }
 
-            .name {
-                font-size: 2.2rem;
-                /* Further adjustment for small screens */
-                animation: typing 2.5s steps(24, end) forwards, blink-cursor 0.75s step-end infinite;
-                animation-delay: 0.8s;
-            }
-
-            .role {
-                font-size: 1.2rem;
-            }
-            
             .hero-image {
                 height: 200px;
             }
             
-            h2 {
-                font-size: 1.8rem;
+            .container {
+                padding: 0 1rem;
             }
             
-            .container {
-                padding: 50px 15px;
+            /* FIXED: Small screen name typing animation */
+            .name {
+                font-size: clamp(1.7rem, 8vw, 2.2rem);
+                animation: typing 2s steps(24, end) forwards, blink-cursor 0.75s step-end infinite;
+                animation-delay: 0.8s;
             }
         }
 
         @media (max-width: 400px) {
+            /* FIXED: Extra small screen name typing animation */
             .name {
-                font-size: 1.9rem;
-                /* Final adjustment for very small screens */
-                animation: typing 2s steps(24, end) forwards, blink-cursor 0.75s step-end infinite;
+                font-size: clamp(1.5rem, 9vw, 1.9rem);
+                animation: typing 1.8s steps(24, end) forwards, blink-cursor 0.75s step-end infinite;
                 animation-delay: 0.8s;
-            }
-            
-            .hero-image {
-                height: 180px;
-            }
-            
-            nav a {
-                font-size: 0.9rem;
-                margin: 0 8px 8px;
             }
         }
     </style>
@@ -847,13 +804,16 @@
     <header id="navbar">
         <div class="container nav-content">
             <h1 class="logo"><i class="fas fa-code"></i> HANIF.AI</h1>
-            <nav>
+            <nav class="nav-links" id="navLinks">
                 <a href="#hero">Home</a>
                 <a href="#skills">Skills</a>
                 <a href="#projects">Projects</a>
                 <a href="#certificates">Certificates</a>
                 <a href="#contact">Contact</a>
             </nav>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </header>
 
@@ -933,42 +893,42 @@
         <h2>Certifications & Achievements</h2>
         <p class="section-subtitle">A visual showcase of my expertise in AI, Mobile Development, and Python programming.</p>
         <div class="certificates-grid">
-            <div class="cert-card-image anim-fade-in-slow" style="--delay: 0s;" onclick="openModal('cer1.png')">
+            <div class="cert-card-image anim-fade-in-slow" style="--delay: 0s;" onclick="openModal('cer1.png')" role="button" tabindex="0" aria-label="View Deep Learning Specialization Certificate">
                 <img src="cer1.png" alt="Deep Learning Specialization Certificate" class="cert-image">
                 <div class="cert-overlay">
                     <i class="fas fa-search-plus"></i>
                 </div>
             </div>
             
-            <div class="cert-card-image anim-fade-in-slow" style="--delay: 0.1s;" onclick="openModal('cer2.png')">
+            <div class="cert-card-image anim-fade-in-slow" style="--delay: 0.1s;" onclick="openModal('cer2.png')" role="button" tabindex="0" aria-label="View Professional React Native Developer Certificate">
                 <img src="cer2.png" alt="Professional React Native Developer Certificate" class="cert-image">
                 <div class="cert-overlay">
                     <i class="fas fa-search-plus"></i>
                 </div>
             </div>
             
-            <div class="cert-card-image anim-fade-in-slow" style="--delay: 0.2s;" onclick="openModal('cer3.png')">
+            <div class="cert-card-image anim-fade-in-slow" style="--delay: 0.2s;" onclick="openModal('cer3.png')" role="button" tabindex="0" aria-label="View Python for Data Analysis Certificate">
                 <img src="cer3.png" alt="Python for Data Analysis Certificate" class="cert-image">
                 <div class="cert-overlay">
                     <i class="fas fa-search-plus"></i>
                 </div>
             </div>
             
-            <div class="cert-card-image anim-fade-in-slow" style="--delay: 0.3s;" onclick="openModal('cer4.png')">
+            <div class="cert-card-image anim-fade-in-slow" style="--delay: 0.3s;" onclick="openModal('cer4.png')" role="button" tabindex="0" aria-label="View Google Cloud Firebase Development Certificate">
                 <img src="cer4.png" alt="Google Cloud Firebase Development Certificate" class="cert-image">
                 <div class="cert-overlay">
                     <i class="fas fa-search-plus"></i>
                 </div>
             </div>
             
-            <div class="cert-card-image anim-fade-in-slow" style="--delay: 0.4s;" onclick="openModal('cer5.png')">
+            <div class="cert-card-image anim-fade-in-slow" style="--delay: 0.4s;" onclick="openModal('cer5.png')" role="button" tabindex="0" aria-label="View Advanced JavaScript Algorithms Certificate">
                 <img src="cer5.png" alt="Advanced JavaScript Algorithms Certificate" class="cert-image">
                 <div class="cert-overlay">
                     <i class="fas fa-search-plus"></i>
                 </div>
             </div>
             
-            <div class="cert-card-image anim-fade-in-slow" style="--delay: 0.5s;" onclick="openModal('cer6.png')">
+            <div class="cert-card-image anim-fade-in-slow" style="--delay: 0.5s;" onclick="openModal('cer6.png')" role="button" tabindex="0" aria-label="View Version Control with Git & GitHub Certificate">
                 <img src="cer6.png" alt="Version Control with Git & GitHub Certificate" class="cert-image">
                 <div class="cert-overlay">
                     <i class="fas fa-search-plus"></i>
@@ -987,9 +947,9 @@
                 <p><i class="fas fa-map-marker-alt"></i> 64/3 Omsakthi Nagar, Ramanathapuram</p>
                 <p><i class="fas fa-phone"></i> +91-9342547613</p>
                 <p><i class="fas fa-envelope"></i> <a href="mailto:hanifzayedsharif@gmail.com">hanifzayedsharif@gmail.com</a></p>
-                <p><i class="fas fa-globe"></i> <a href="http://www.haniftech.com" target="_blank">www.haniftech.com</a></p>
+                <p><i class="fas fa-globe"></i> <a href="http://www.haniftech.com" target="_blank" rel="noopener">www.haniftech.com</a></p>
                 <div class="social-links">
-                    <a href="http://www.linkedin.com/in/hanif-zayed-sharif-048bb6249" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="http://www.linkedin.com/in/hanif-zayed-sharif-048bb6249" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                     <a href="mailto:hanifzayedsharif@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
                 </div>
             </div>
@@ -1008,7 +968,7 @@
 
     <div id="certModal">
       <span class="close">&times;</span>
-      <img class="modal-content" id="img01">
+      <img class="modal-content" id="img01" alt="Certificate preview">
     </div>
 
     <script>
@@ -1021,23 +981,59 @@
         function openModal(imgSrc) {
             modal.style.display = "block";
             modalImg.src = imgSrc;
+            document.body.style.overflow = "hidden"; // Prevent scrolling when modal is open
         }
         
         // Function to close the modal (using the X button)
         span.onclick = function() {
             modal.style.display = "none";
+            document.body.style.overflow = "auto"; // Restore scrolling
         }
         
         // Function to close the modal (clicking outside the image)
         modal.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
+                document.body.style.overflow = "auto"; // Restore scrolling
             }
         }
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && modal.style.display === 'block') {
+                modal.style.display = "none";
+                document.body.style.overflow = "auto"; // Restore scrolling
+            }
+        });
         
         // Document Ready Code
         document.addEventListener('DOMContentLoaded', () => {
             const navbar = document.getElementById('navbar');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const navLinks = document.getElementById('navLinks');
+            
+            // Mobile menu toggle
+            mobileMenuBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                const icon = mobileMenuBtn.querySelector('i');
+                if (navLinks.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+            
+            // Close mobile menu when clicking on a link
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                });
+            });
             
             // 1. Observer for Scroll Animations
             const observerOptions = {
@@ -1076,28 +1072,30 @@
                 }
             });
             
-            // 3. Enhanced Name Typing Animation for All Devices
+            // 3. FIXED: Enhanced Name Typing Animation for All Devices
             const nameElement = document.querySelector('.name');
             const nameText = nameElement.textContent;
             
-            // Function to restart animation
+            // Function to restart animation with proper timing
             function restartAnimation() {
                 // Get current animation duration based on screen size
-                let animationDuration = "4s";
+                let animationDuration = "3s";
+                let steps = nameText.length;
+                
                 if (window.innerWidth <= 768) {
-                    animationDuration = "3s";
-                }
-                if (window.innerWidth <= 576) {
                     animationDuration = "2.5s";
                 }
-                if (window.innerWidth <= 400) {
+                if (window.innerWidth <= 576) {
                     animationDuration = "2s";
+                }
+                if (window.innerWidth <= 400) {
+                    animationDuration = "1.8s";
                 }
                 
                 // Force reflow to restart animation
                 nameElement.style.animation = 'none';
                 void nameElement.offsetWidth; // Trigger reflow
-                nameElement.style.animation = `typing ${animationDuration} steps(${nameText.length}, end) forwards, blink-cursor 0.75s step-end infinite`;
+                nameElement.style.animation = `typing ${animationDuration} steps(${steps}, end) forwards, blink-cursor 0.75s step-end infinite`;
                 nameElement.style.animationDelay = "0.8s";
             }
             
@@ -1106,6 +1104,12 @@
             
             // Initial animation setup
             restartAnimation();
+            
+            // 4. Additional fix: Ensure name is visible after animation completes
+            nameElement.addEventListener('animationend', function() {
+                // Remove the cursor after typing completes
+                this.style.borderRight = 'none';
+            });
         });
     </script>
 </body>
